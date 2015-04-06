@@ -293,7 +293,7 @@ int client_count_tcp(char *server_ip, char *server_port, char *number_input)
         printf("        Number of Packets Dropped   : %d\n", dropped);
 
 	printf("\n");
-	printf("Histogram:\n");
+	printf("Histogram -- number of packets per bracket of nanoseconds:\n");
 	histogram_print(hist);
 	histogram_free(hist);
 
@@ -417,7 +417,7 @@ int client_count_udp(char *server_ip, char *server_port, char *number_input)
         printf("        Number of Packets Dropped   : %d\n", dropped);
 
 	printf("\n");
-	printf("Histogram:\n");
+	printf("Histogram -- number of packets per bracket of nanoseconds:\n");
 	histogram_print(hist);
 	histogram_free(hist);
 
