@@ -295,6 +295,7 @@ int client_count_tcp(char *server_ip, char *server_port, char *number_input)
 	printf("\n");
 	printf("Histogram:\n");
 	histogram_print(hist);
+	histogram_free(hist);
 
         freeaddrinfo(server);
         close(sockfd);
@@ -312,6 +313,8 @@ int client_count_udp(char *server_ip, char *server_port, char *number_input)
         struct timeval tval_start, tval_end, sock_opts;
         long long int diff, min = -1LL, max = -1LL;
         long double avg = 0.0L;
+	// From 0 seconds to 2,000,000 microseconds with 10 buckets
+        struct histogram* hist = histogram_create(0, 2000000, 10);
 
         /* Get the number from string number_input and check the result */
         number_try = atoi(number_input);
@@ -401,6 +404,8 @@ int client_count_udp(char *server_ip, char *server_port, char *number_input)
                 if (min == -1LL || diff < min) min = diff;  
                 if (max == -1LL || diff > max) max = diff;
                 avg = avg * (successes - 1) / successes + (long double)diff / successes ;
+
+		histogram_inc(hist, diff);
         }
 
         /* Show the result */
@@ -410,6 +415,11 @@ int client_count_udp(char *server_ip, char *server_port, char *number_input)
         printf("        The max time of latency     : %lld us\n", max);
         printf("        The average time of latency : %Lf us\n", avg);
         printf("        Number of Packets Dropped   : %d\n", dropped);
+
+	printf("\n");
+	printf("Histogram:\n");
+	histogram_print(hist);
+	histogram_free(hist);
 
         freeaddrinfo(server);
         close(sockfd);
